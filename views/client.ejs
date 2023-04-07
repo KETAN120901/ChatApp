@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/styles.css">
+  <title>groupchat app</title>
+  <style>
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <div class="online message center">
+      <div>online:</div>
+    </div>
+    <%que.forEach(element => {%>
+      <div class="left message"><span style="color:blue"><%=element.name%> :</span> <%=element.content%></div>
+    <%})%>
+  </div>
+  <form id="form" action="">
+    <input id="input" autocomplete="off" /><button type="submit">Send</button>
+  </form>
+  <script src="socket.io/socket.io.js"></script>
+  <script>
+    
+    var socket = io();
+    var messageContainer = document.querySelector(".container");
+    var online = document.querySelector(".online");
+    var form = document.getElementById('form');
+    var input = document.getElementById('input');
+    const append = (message, position) => {
+      const messageElement = document.createElement('div');
+      messageElement.innerHTML = message;
+      messageElement.classList.add('message');
+      messageElement.classList.add(position);
+      messageContainer.append(messageElement);
+      messageContainer.scrollTo(0, messageContainer.scrollHeight);
+      
+    }
+    const name = prompt("Enter your name");
+    socket.emit('new-user-joined', name);
+    socket.on('user-joined', data => {
+      append(`${data} joined the chat`, 'center');
+      const messageonline = document.createElement('div');
+      messageonline.innerText = data;
+      messageonline.id = `${data}`;
+      online.append(messageonline);
+      socket.emit('onlineusers', data);
+    })
+    socket.on(name, datasender => {
+      const messageonline = document.createElement('div');
+      messageonline.innerText = datasender;
+      messageonline.id = `${datasender}`;
+      online.append(messageonline);
+    })
+    socket.on('receive', data => {
+      append(data, 'left')
+    })
+    socket.on('left', name => {
+      append(`${name} left the chat`, 'centerl')
+      var element = document.getElementById(`${name}`);
+      element.remove();
+    })
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (input.value) {
+        const message = input.value;
+        append(`<span style="color:blue">you: </span> ${message}`, 'right');
+        socket.emit('send', message);
+        input.value = "";
+      }
+    });
+  </script>
+</body>
+
+</html>
