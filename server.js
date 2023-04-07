@@ -66,5 +66,5 @@ io.on('connection', (socket) => {
   });
 });
 server.listen(PORT, () => {
-  console.log("listening on 8000");
+  console.log(`listening on ${PORT}"`);
 });
