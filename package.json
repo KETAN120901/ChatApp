@@ -17,7 +17,8 @@
     "mongoose": "^7.0.1",
     "node": "^19.8.1",
     "nodemon": "^2.0.19",
-    "socket.io": "^4.5.1"
+    "socket.io": "^4.5.1",
+    "yarn": "^1.22.19"
   },
   "repository": {
     "type": "git",
