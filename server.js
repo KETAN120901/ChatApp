@@ -20,11 +20,11 @@ app.use(express.static("public"));
 mongoose.set('strictQuery', false);
 mongoose.connect(process.env.MONGO_URI);
 //mongoose.connect("mongodb://localhost:27017/chatDB");
-const msgSchema=new mongoose.schema{
-  name:String,
-  content:String,
-  id:String
-};
+const msgSchema = new mongoose.Schema({
+  name: String,
+  content: String,
+  id: String
+});
 const msg=mongoose.model("msg",msgSchema);
 app.get('/', async (req, res) => {
   try {
