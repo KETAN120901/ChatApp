@@ -28,12 +28,21 @@ const msgSchema={
 const msg=mongoose.model("msg",msgSchema);
 app.get('/', (req, res) => {
   
-  async function f1(){
-    const query=await msg.find();
-    res.render("client",{que:query});
+  // async function f1(){
+  //   const query=await msg.find();
+  //   res.render("client",{que:query});
     
-  }
-  f1();
+  // }
+  // f1();
+  async function f1(req, res) {
+    try {
+        const query = await msg.find(); // Perform the asynchronous operation
+        res.render("client", { que: query }); // Render the view with the data
+    } catch (error) {
+        console.error('Error occurred:', error); // Log the error for debugging
+        res.status(500).send('An error occurred'); // Send a user-friendly error response
+    }
+}
   
   
 });
