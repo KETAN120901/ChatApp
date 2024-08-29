@@ -20,32 +20,41 @@ app.use(express.static("public"));
 mongoose.set('strictQuery', false);
 mongoose.connect(process.env.MONGO_URI);
 //mongoose.connect("mongodb://localhost:27017/chatDB");
-const msgSchema={
+const msgSchema=new mongoose.schema{
   name:String,
   content:String,
   id:String
 };
 const msg=mongoose.model("msg",msgSchema);
-app.get('/', (req, res) => {
-  
-  // async function f1(){
-  //   const query=await msg.find();
-  //   res.render("client",{que:query});
-    
-  // }
-  // f1();
-  async function f1(req, res) {
-    try {
-        const query = await msg.find(); // Perform the asynchronous operation
-        res.render("client", { que: query }); // Render the view with the data
-    } catch (error) {
-        console.error('Error occurred:', error); // Log the error for debugging
-        res.status(500).send('An error occurred'); // Send a user-friendly error response
-    }
-}
-  
-  
+app.get('/', async (req, res) => {
+  try {
+    const query = await Msg.find(); // Perform the asynchronous operation
+    res.render('client', { que: query }); // Render the view with the data
+  } catch (error) {
+    console.error('Error occurred:', error); // Log the error for debugging
+    res.status(500).send('An error occurred'); // Send a user-friendly error response
+  }
 });
+// app.get('/', (req, res) => {
+  
+//   // async function f1(){
+//   //   const query=await msg.find();
+//   //   res.render("client",{que:query});
+    
+//   // }
+//   // f1();
+//   async function f1(req, res) {
+//     try {
+//         const query = await msg.find(); // Perform the asynchronous operation
+//         res.render("client", { que: query }); // Render the view with the data
+//     } catch (error) {
+//         console.error('Error occurred:', error); // Log the error for debugging
+//         res.status(500).send('An error occurred'); // Send a user-friendly error response
+//     }
+// }
+  
+  
+// });
 io.on('connection', (socket) => {
   socket.on('new-user-joined', name => {
     if (name == "" || name == null) {
